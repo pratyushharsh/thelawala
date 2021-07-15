@@ -15,6 +15,8 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
   Stream<AuthenticationState> mapEventToState(
     AuthenticationEvent event,
   ) async* {
-    // TODO: implement mapEventToState
+    if (event is InitialAuthEvent) {
+      yield state;
+    }
   }
 }
