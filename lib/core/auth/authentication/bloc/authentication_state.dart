@@ -5,21 +5,21 @@ enum AuthenticationStatus { AUTHENTICATED, UNAUTHENTICATED, UNKNOWN }
 
 class AuthenticationState extends Equatable {
   final AuthenticationStatus status;
-  final UserModel employee;
+  final UserModel user;
 
-  const AuthenticationState._({required this.status, required this.employee});
+  const AuthenticationState._({required this.status, required this.user});
 
   const AuthenticationState.unauthenticated()
       : this._(
       status: AuthenticationStatus.UNAUTHENTICATED,
-      employee: UserModel.empty);
+      user: UserModel.empty);
 
-  const AuthenticationState.authenticated()
+  const AuthenticationState.authenticated(UserModel user)
       : this._(
       status: AuthenticationStatus.AUTHENTICATED,
-      employee: UserModel.empty);
+      user: user);
 
   @override
-  List<Object?> get props => [status, employee];
+  List<Object?> get props => [status, user];
 }
 

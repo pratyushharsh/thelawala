@@ -12,7 +12,11 @@ class SignUpFailure implements Exception {
 
 class UserNotConfirmFailure implements Exception {}
 
-class LogInWithEmailAndPasswordFailure implements Exception {}
+class LogInWithEmailAndPasswordFailure implements Exception {
+  final String error;
+
+  LogInWithEmailAndPasswordFailure(this.error);
+}
 
 class LogInWithGoogleFailure implements Exception {}
 
@@ -74,9 +78,9 @@ class AuthenticationRepository {
       return res.isSignedIn;
     } on UserNotConfirmedException {
       throw UserNotConfirmFailure();
-    } on Exception catch (e) {
+    } on AuthException catch (e) {
       print(e);
-      throw LogInWithEmailAndPasswordFailure();
+      throw LogInWithEmailAndPasswordFailure(e.message);
     }
   }
 }
