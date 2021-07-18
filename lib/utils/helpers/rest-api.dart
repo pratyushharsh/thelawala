@@ -33,13 +33,13 @@ class RestApiBuilder {
     return map;
   }
 
-  Response get({required RestOptions restOptions}) {
-    http.get(url)
-  }
-
-  Response post({required RestOptions restOptions}) {
-    http.post(url)
-  }
+  // Response get({required RestOptions restOptions}) {
+  //   http.get(url)
+  // }
+  //
+  // Response post({required RestOptions restOptions}) {
+  //   http.post(url)
+  // }
 
   Response delete({required RestOptions restOptions}) {
     throw UnimplementedError('get has not been implemented.');
