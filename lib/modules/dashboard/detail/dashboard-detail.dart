@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:thelawala/constants/Constants.dart';
-import 'package:thelawala/modules/dashboard/detail/vendor-menu.dart';
+import 'package:thelawala/modules/dashboard/detail/basic-detail.dart';
+import 'package:thelawala/modules/dashboard/detail/ratings-card.dart';
+import 'package:thelawala/modules/dashboard/detail/upcoming-schedule.dart';
 
 import 'custom-silver-appbar-deligate.dart';
+import 'image-grid.dart';
 
 class DashboardDetail extends StatefulWidget {
   const DashboardDetail({Key? key}) : super(key: key);
@@ -24,11 +27,12 @@ class _DashboardDetailState extends State<DashboardDetail> {
             shrinkWrap: true,
             primary: false,
             children: [
-              SizedBox(height: 10,),
-              MenuCard(),
-              MenuCard(),
-              MenuCard(),
-              MenuCard(),
+              SizedBox(height: 40,),
+              BasicDetailCard(),
+              UpcomingSchedules(),
+              // MenuCard(),
+              ImageGrid(),
+              RatingsCard()
             ],
           ),
         ),

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:thelawala/constants/Constants.dart';
 import 'package:thelawala/core/settings/settings.dart';
 import 'package:thelawala/modules/dashboard/detail/dashboard-detail.dart';
 import 'package:thelawala/modules/orders/order-detail.dart';
-
+import 'package:thelawala/utils/services/menu-service.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -21,13 +22,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  MenuRepository repo = MenuRepository();
+
   int _selectedIndex = 0;
 
-  static List<Widget> _tabs = [
-    DashboardDetail(),
-    OrderDetail(),
-    Settings()
-  ];
+  static List<Widget> _tabs = [DashboardDetail(), OrderDetail(), Settings()];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -38,15 +38,44 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFE9EBEE),
       body: _tabs[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.bookmark_border), label: "Orders"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
+      bottomNavigationBar: Row(
+        children: [
+          buildNavbarItem(Icon(Icons.home), 0),
+          buildNavbarItem(Icon(Icons.bookmark_border), 1),
+          buildNavbarItem(Icon(Icons.settings), 2),
         ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+      ),
+    );
+  }
+
+  Widget buildNavbarItem(Widget icon, int index) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          repo.getMenu();
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+        child: Container(
+            height: tAppBarToolbarHeight,
+            decoration:
+                _selectedIndex == index ? BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(width: 4, color: Colors.white)
+                  ),
+                  gradient: LinearGradient(
+                      colors: [
+                        Colors.white.withOpacity(0.5),
+                        Colors.white.withOpacity(0.025)
+                      ],
+                      begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter
+                  )
+                ) : BoxDecoration(),
+            child: icon),
       ),
     );
   }

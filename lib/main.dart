@@ -1,3 +1,4 @@
+import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ void main() async {
 Future<void> _initAmplifyFlutter() async {
   try {
     AmplifyAuthCognito auth = AmplifyAuthCognito();
-    await Amplify.addPlugin(auth);
+    await Amplify.addPlugins([auth]);
     await Amplify.configure(amplifyconfig);
     print('Aws Configured');
   } on AmplifyAlreadyConfiguredException {

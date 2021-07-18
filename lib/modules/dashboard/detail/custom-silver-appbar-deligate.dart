@@ -44,7 +44,7 @@ class CustomSilverAppBarDelegate extends SliverPersistentHeaderDelegate {
   Widget buildAppBar(double shrinkOffset) => Opacity(
         opacity: appear(shrinkOffset),
         child: AppBar(
-          elevation: 0,
+          toolbarHeight: tAppBarToolbarHeight,
           title: Row(
             children: [
               Hero(
@@ -76,7 +76,7 @@ class CustomSilverAppBarDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => expandedHeight;
 
   @override
-  double get minExtent => kToolbarHeight + 30;
+  double get minExtent => tAppBarToolbarHeight + 30;
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {

@@ -7,7 +7,7 @@ class MenuCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 25),
+      padding: EdgeInsets.only(top: 5),
       // width: double.infinity,
       child: Card(
         shape: RoundedRectangleBorder(
