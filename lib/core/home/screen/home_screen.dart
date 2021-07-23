@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:thelawala/constants/Constants.dart';
 import 'package:thelawala/core/settings/settings.dart';
 import 'package:thelawala/modules/dashboard/detail/dashboard-detail.dart';
+import 'package:thelawala/modules/menu/menu_screen.dart';
 import 'package:thelawala/modules/orders/order-detail.dart';
 import 'package:thelawala/utils/services/menu-service.dart';
+
+import 'bloc/home_bloc.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -22,12 +25,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   MenuRepository repo = MenuRepository();
 
   int _selectedIndex = 0;
 
-  static List<Widget> _tabs = [DashboardDetail(), OrderDetail(), Settings()];
+  static List<Widget> _tabs = [DashboardDetail(), MenuScreen(), OrderDetail(), Settings()];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -43,8 +45,9 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: Row(
         children: [
           buildNavbarItem(Icon(Icons.home), 0),
-          buildNavbarItem(Icon(Icons.bookmark_border), 1),
-          buildNavbarItem(Icon(Icons.settings), 2),
+          buildNavbarItem(Icon(Icons.menu), 1),
+          buildNavbarItem(Icon(Icons.bookmark_border), 2),
+          buildNavbarItem(Icon(Icons.settings), 3),
         ],
       ),
     );
@@ -54,27 +57,21 @@ class _HomePageState extends State<HomePage> {
     return Expanded(
       child: GestureDetector(
         onTap: () {
-          repo.getMenu();
           setState(() {
             _selectedIndex = index;
           });
         },
         child: Container(
             height: tAppBarToolbarHeight,
-            decoration:
-                _selectedIndex == index ? BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(width: 4, color: Colors.white)
-                  ),
-                  gradient: LinearGradient(
-                      colors: [
-                        Colors.white.withOpacity(0.5),
-                        Colors.white.withOpacity(0.025)
-                      ],
-                      begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter
-                  )
-                ) : BoxDecoration(),
+            decoration: _selectedIndex == index
+                ? BoxDecoration(
+                    border: Border(
+                        bottom: BorderSide(width: 4, color: Colors.white)),
+                    gradient: LinearGradient(colors: [
+                      Colors.white.withOpacity(0.5),
+                      Colors.white.withOpacity(0.025)
+                    ], begin: Alignment.bottomCenter, end: Alignment.topCenter))
+                : BoxDecoration(),
             child: icon),
       ),
     );

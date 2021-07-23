@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:thelawala/constants/Constants.dart';
+import 'package:thelawala/core/home/screen/bloc/home_bloc.dart';
+import 'package:thelawala/models/response/get-user-profile.dart';
 import 'package:thelawala/modules/dashboard/detail/profile-card.dart';
 
 class CustomSilverAppBarDelegate extends SliverPersistentHeaderDelegate {
@@ -17,19 +20,23 @@ class CustomSilverAppBarDelegate extends SliverPersistentHeaderDelegate {
     final size = 180;
     final top = expandedHeight - shrinkOffset - size / 2;
 
-    return Stack(
-      fit: StackFit.expand,
-      clipBehavior: Clip.none,
-      children: [
-        buildBackground(shrinkOffset),
-        buildAppBar(shrinkOffset),
-        Positioned(
-          top: top,
-          left: 6,
-          right: 6,
-          child: buildFloating(shrinkOffset),
-        ),
-      ],
+    return BlocBuilder<HomeBloc, HomeState>(
+      builder: (context, state) {
+        return Stack(
+          fit: StackFit.expand,
+          clipBehavior: Clip.none,
+          children: [
+            buildBackground(shrinkOffset),
+            buildAppBar(shrinkOffset, state.userDetail),
+            Positioned(
+              top: top,
+              left: 6,
+              right: 6,
+              child: buildFloating(shrinkOffset),
+            ),
+          ],
+        );
+      }
     );
   }
 
@@ -41,7 +48,7 @@ class CustomSilverAppBarDelegate extends SliverPersistentHeaderDelegate {
         ),
       );
 
-  Widget buildAppBar(double shrinkOffset) => Opacity(
+  Widget buildAppBar(double shrinkOffset, UserProfileResponse? user) => Opacity(
         opacity: appear(shrinkOffset),
         child: AppBar(
           toolbarHeight: tAppBarToolbarHeight,
@@ -57,7 +64,7 @@ class CustomSilverAppBarDelegate extends SliverPersistentHeaderDelegate {
                 ),
               ),
               SizedBox(width: 10,),
-              Text("Chef Bob's Lobstah Trap")
+              Text("${user?.name}")
             ],
           ),
           centerTitle: true,
