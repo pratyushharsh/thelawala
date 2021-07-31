@@ -28,7 +28,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Stream<HomeState> _mapGetUserDetail() async* {
     try {
       yield state.copyWith(status: DashboardStatus.LOADING);
-      RestOptions options = RestOptions(path: ApiUrl.GET_VENDOR_PROFILE);
+      RestOptions options = RestOptions(path: '/');
       var response = await api.get(restOptions: options);
       UserProfileResponse resp = UserProfileResponse.fromJson(api.parsedResponse(response));
       print(resp);

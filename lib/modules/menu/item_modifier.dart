@@ -27,12 +27,24 @@ class NewItemModifier extends StatelessWidget {
           ),
           title: Text("New Item modifier"),
           actions: [
-            Container(
-              padding: EdgeInsets.all(8),
-              child: OutlinedButton(
-                onPressed: () {},
-                child: Text('Save'),
-              ),
+            BlocBuilder<ItemModifierBloc, ItemModifierState>(
+              builder: (context, state) {
+                return Container(
+                  padding: EdgeInsets.all(8),
+                  child: OutlinedButton(
+                    onPressed: state.isValid ? () {
+                      MenuItemModifier modifier = MenuItemModifier(
+                          groupName: state.groupName,
+                        mustSelect: state.mustSelect,
+                        multipleSelectionAllowed: state.multipleSelectionAllowed,
+                        items: state.items
+                      );
+                      Navigator.of(context).pop([modifier]);
+                    } : null,
+                    child: Text('Save'),
+                  ),
+                );
+              }
             )
           ],
         ),

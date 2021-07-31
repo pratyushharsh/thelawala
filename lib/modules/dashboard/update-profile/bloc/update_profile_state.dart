@@ -1,9 +1,16 @@
 part of 'update_profile_bloc.dart';
 
-enum UpdateProfileStatus { INITIAL, PREFILLED_DATA, AWAITING_CONFIRMATION, SUCCESS, FAILURE }
+enum UpdateProfileStatus {
+  INITIAL,
+  PREFILLED_DATA,
+  AWAITING_CONFIRMATION,
+  SUCCESS,
+  FAILURE
+}
 
 class UpdateProfileState extends Equatable {
   final String name;
+  final String tagline;
   final List<String> cities;
   final List<String> dishes;
   final String introduction;
@@ -44,6 +51,7 @@ class UpdateProfileState extends Equatable {
 
   UpdateProfileState(
       {required this.name,
+      required this.tagline,
       required this.cities,
       required this.dishes,
       required this.introduction,
@@ -58,6 +66,7 @@ class UpdateProfileState extends Equatable {
 
   UpdateProfileState copyWith(
       {String? name,
+      String? tagline,
       List<String>? cities,
       List<String>? dishes,
       String? introduction,
@@ -71,6 +80,7 @@ class UpdateProfileState extends Equatable {
       UpdateProfileStatus? status}) {
     return UpdateProfileState(
         name: name ?? this.name,
+        tagline: tagline ?? this.tagline,
         cities: cities ?? this.cities,
         dishes: dishes ?? this.dishes,
         introduction: introduction ?? this.introduction,
@@ -93,13 +103,14 @@ class UpdateProfileState extends Equatable {
   List<Object?> get props => [
         name,
         cities,
+        tagline,
         dishes,
         introduction,
         phone,
         email,
         website,
         facebook,
-    twitter,
+        twitter,
         instagram,
         youtube,
         status

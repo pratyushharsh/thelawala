@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:thelawala/constants/Constants.dart';
 import 'package:thelawala/core/settings/settings.dart';
+import 'package:thelawala/modules/category/category_screen.dart';
 import 'package:thelawala/modules/dashboard/detail/dashboard-detail.dart';
 import 'package:thelawala/modules/menu/menu_screen.dart';
 import 'package:thelawala/modules/orders/order-detail.dart';
@@ -29,7 +30,7 @@ class _HomePageState extends State<HomePage> {
 
   int _selectedIndex = 0;
 
-  static List<Widget> _tabs = [DashboardDetail(), MenuScreen(), OrderDetail(), Settings()];
+  static List<Widget> _tabs = [DashboardDetail(), CategoryScreen(), OrderDetail(), Settings()];
 
   void _onItemTapped(int index) {
     setState(() {

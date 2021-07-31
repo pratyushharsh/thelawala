@@ -23,14 +23,14 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
             cities: profile?.cities ?? [],
             dishes: profile?.cuisines ?? [],
             introduction: profile?.introduction ?? "",
-            phone: profile?.contact.phone ?? "",
-            email: profile?.contact.email ?? "",
-            website: profile?.contact.website ?? "",
-            facebook: profile?.social.facebook ?? "",
-            instagram: profile?.social.instagram ?? "",
-            twitter: profile?.social.twitter ?? "",
-            youtube: profile?.social.youtube ?? "",
-            status: UpdateProfileStatus.INITIAL));
+            phone: profile?.phone ?? "",
+            email: profile?.email ?? "",
+            website: profile?.website ?? "",
+            facebook: profile?.facebook ?? "",
+            instagram: profile?.instagram ?? "",
+            twitter: profile?.twitter ?? "",
+            youtube: profile?.youtube ?? "",
+            status: UpdateProfileStatus.INITIAL, tagline: ''));
 
   @override
   Stream<UpdateProfileState> mapEventToState(
@@ -65,12 +65,12 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
     yield state.copyWith(
       name: user.name,
       introduction: user.introduction,
-      youtube: user.social.youtube,
-      instagram: user.social.instagram,
-      facebook: user.social.facebook,
-      website: user.contact.website,
-      email: user.contact.email,
-      phone: user.contact.phone,
+      youtube: user.youtube,
+      instagram: user.instagram,
+      facebook: user.facebook,
+      website: user.website,
+      email: user.email,
+      phone: user.phone,
       cities: user.cities,
       dishes: user.cuisines,
       status: UpdateProfileStatus.PREFILLED_DATA
@@ -84,18 +84,18 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
       EditProfileRequest req = EditProfileRequest(
         name: state.name,
         introduction: state.introduction,
-        contact: ContactRequest(
-          phone: state.phone,
-          email: state.email,
-          website: state.website
-        ),
-        social: SocialRequest(
-          facebook: state.facebook,
-          instagram: state.instagram,
-          youtube: state.youtube
-        )
+        phone: state.phone,
+        email: state.email,
+        website: state.website,
+        facebook: state.facebook,
+        instagram: state.instagram,
+        youtube: state.youtube,
+        tags: [],
+        twitter: state.twitter,
+        cuisines: [],
+        tagline: state.tagline
       );
-      RestOptions options = RestOptions(path: "/vendor", body: json.encode(req.toJson()));
+      RestOptions options = RestOptions(path: "/", body: json.encode(req.toJson()));
       var response = await api.post(restOptions: options);
       print(response);
       yield state.copyWith(status: UpdateProfileStatus.SUCCESS);

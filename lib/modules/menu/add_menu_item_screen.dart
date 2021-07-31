@@ -1,74 +1,82 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:thelawala/config/routes/route_config.dart';
 import 'package:thelawala/constants/Constants.dart';
+import 'package:thelawala/models/pojo/menu_modal.dart';
+import 'package:thelawala/widgets/custom_switch.dart';
 import 'package:thelawala/widgets/custom_text_field.dart';
 import 'package:thelawala/widgets/header-card.dart';
+
+import 'bloc/new_menu_bloc.dart';
 
 class AddMenuItemScreen extends StatelessWidget {
   const AddMenuItemScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: tScaffoldColor,
-      appBar: AppBar(
-        toolbarHeight: tAppBarToolbarHeight,
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.of(context).pop();
-          },
-          child: Icon(Icons.close),
-        ),
-        title: Text("Add New Product"),
-        actions: [
-          Container(
-            padding: EdgeInsets.all(8),
-            child: OutlinedButton(
-              onPressed: () {},
-              child: Text('Save'),
-            ),
-          )
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 30,
-            ),
+    return BlocProvider(
+      lazy: false,
+      create: (_) => NewMenuBloc(),
+      child: Scaffold(
+        backgroundColor: tScaffoldColor,
+        appBar: AppBar(
+          toolbarHeight: tAppBarToolbarHeight,
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            child: Icon(Icons.close),
+          ),
+          title: Text("Add New Product"),
+          actions: [
             Container(
-              child: Container(
-                decoration: new BoxDecoration(
-                  border: Border.all(width: 1, style: BorderStyle.solid),
-                ),
-                child: SizedBox(
-                  height: 150,
-                  width: 150,
-                ),
+              padding: EdgeInsets.all(8),
+              child: OutlinedButton(
+                onPressed: () {},
+                child: Text('Save'),
               ),
-            ),
-            SizedBox(
-              height: 30,
-            ),
-            BasicItemDetail(),
-            HeaderCard(
-              title: "Tags",
-              subtitle:
-              "Add few tags so people can search using tags.",
-            ),
-            ProductTags(),
-            HeaderCard(
-              title: "Modifiers",
-              subtitle:
-                  "Let Your Customer customize their order the way they want.",
-            ),
-            Modifier(),
-            SizedBox(
-              height: 100,
             )
           ],
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 30,
+              ),
+              Container(
+                child: Container(
+                  decoration: new BoxDecoration(
+                    border: Border.all(width: 1, style: BorderStyle.solid),
+                  ),
+                  child: SizedBox(
+                    height: 150,
+                    width: 150,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              BasicItemDetail(),
+              HeaderCard(
+                title: "Tags",
+                subtitle: "Add few tags so people can search using tags.",
+              ),
+              ProductTags(),
+              HeaderCard(
+                title: "Modifiers",
+                subtitle:
+                    "Let Your Customer customize their order the way they want.",
+              ),
+              Modifier(),
+              SizedBox(
+                height: 100,
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -94,28 +102,46 @@ class BasicItemDetail extends StatelessWidget {
           right: 12,
           top: 12,
         ),
-        child: Column(
-          children: [
-            CustomTextField(
-              label: "Item Name",
-              helperText: "Item Name Which You Would Like Your Customer To See",
-              onValueChange: (val) {},
-            ),
-            CustomTextField(
-              label: "Price",
-              icon: SizedBox(
-                  height: 24,
-                  width: 24,
-                  child: Center(child: FaIcon(CupertinoIcons.money_dollar))),
-              textInputType: TextInputType.number,
-            ),
-            CustomTextField(
-              label: "Description",
-              helperText: "More About ingredients in food.",
-              minLines: 4,
-              maxLines: 6,
-            ),
-          ],
+        child: BlocBuilder<NewMenuBloc, NewMenuState>(
+          builder: (context, state) {
+            return Column(
+              children: [
+                CustomTextField(
+                  initialValue: state.name,
+                  label: "Item Name",
+                  helperText: "Item Name Which You Would Like Your Customer To See",
+                  onValueChange: (val) {
+                    BlocProvider.of<NewMenuBloc>(context).add(OnItemNameChange(val));
+                  },
+                ),
+                CustomTextField(
+                  initialValue: state.price.toStringAsFixed(2),
+                  label: "Price",
+                  icon: SizedBox(
+                      height: 24,
+                      width: 24,
+                      child: Center(child: FaIcon(CupertinoIcons.money_dollar))),
+                  textInputType: TextInputType.number,
+                  onValueChange: (val) {
+                    BlocProvider.of<NewMenuBloc>(context).add(OnPriceChange(double.parse(val)));
+                  },
+                ),
+                CustomTextField(
+                  initialValue: state.description,
+                  label: "Description",
+                  helperText: "More About ingredients in food.",
+                  minLines: 4,
+                  maxLines: 6,
+                  onValueChange: (val) {
+                    BlocProvider.of<NewMenuBloc>(context).add(OnDescriptionChange(val));
+                  },
+                ),
+                CustomSwitch(value: state.active, label: "Active", onChange: (val) {
+                  BlocProvider.of<NewMenuBloc>(context).add(OnActiveChange(val));
+                }),
+              ],
+            );
+          }
         ),
       ),
     );
@@ -210,17 +236,23 @@ class Modifier extends StatelessWidget {
           right: 12,
           top: 12,
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ModifierGroup(),
-            ModifierGroup(),
-            ModifierGroup(),
-            InkWell(
-              onTap: () {
-                Navigator.of(context).pushNamed(RouteConfig.NEW_ITEM_MODIFIER);
-              },
-              child: Container(
+        child:
+            BlocBuilder<NewMenuBloc, NewMenuState>(builder: (context, state) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ...state.modifier.map((e) => ModifierGroup(modifier: e)).toList(),
+              InkWell(
+                onTap: () {
+                  Navigator.of(context)
+                      .pushNamed(RouteConfig.NEW_ITEM_MODIFIER)
+                      .then((value) => {
+                        if (value != null && value is List) {
+                          BlocProvider.of<NewMenuBloc>(context).add(AddNewModifier(value[0]))
+                        }
+                  });
+                },
+                child: Container(
                   width: double.infinity,
                   margin: EdgeInsets.only(top: 6, bottom: 12),
                   padding: EdgeInsets.all(8),
@@ -231,17 +263,20 @@ class Modifier extends StatelessWidget {
                   child: Text(
                     "+ Add New Modifier",
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
-                  )),
-            )
-          ],
-        ),
+                  ),
+                ),
+              )
+            ],
+          );
+        }),
       ),
     );
   }
 }
 
 class ModifierGroup extends StatelessWidget {
-  const ModifierGroup({Key? key}) : super(key: key);
+  final MenuItemModifier modifier;
+  const ModifierGroup({Key? key, required this.modifier}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -256,41 +291,23 @@ class ModifierGroup extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Coke Modifier",
+            "${modifier.groupName}",
             style:
                 TextStyle(color: Colors.black87, fontWeight: FontWeight.w700),
           ),
           Divider(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Pepsi"),
-              Text(
-                "₹ 50.00",
-                style: TextStyle(fontWeight: FontWeight.w500),
-              )
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Pepsi"),
-              Text(
-                "₹ 50.00",
-                style: TextStyle(fontWeight: FontWeight.w600),
-              )
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Pepsi"),
-              Text(
-                "₹ 50.00",
-                style: TextStyle(fontWeight: FontWeight.w600),
-              )
-            ],
-          )
+          ...modifier.items
+              .map((e) => Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("${e.name}"),
+                      Text(
+                        "₹ ${e.price}",
+                        style: TextStyle(fontWeight: FontWeight.w500),
+                      )
+                    ],
+                  ))
+              .toList(),
         ],
       ),
     );

@@ -12,6 +12,21 @@ class RestApiBuilder {
 
   RestApiBuilder(this.baseUrl);
 
+  Future<CognitoAuthSession> getCurrentSession() async {
+    try {
+      AuthSession token = await Amplify.Auth.fetchAuthSession(
+          options: CognitoSessionOptions(getAWSCredentials: true));
+      if (token is CognitoAuthSession) {
+        return token;
+      } else {
+        throw 'Not a valid session';
+      }
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
   Future<String> getAuthToken() async {
     try {
       AuthSession token = await Amplify.Auth.fetchAuthSession(
@@ -25,9 +40,9 @@ class RestApiBuilder {
     return "";
   }
 
-  Future<Map<String, String>> buildAuthHeader() async {
+  Future<Map<String, String>> buildAuthHeader(CognitoAuthSession session) async {
     Map<String, String> map = {
-      "Authorization": await getAuthToken(),
+      "Authorization": session.userPoolTokens!.idToken,
       "x-api-key": 'API_KEY',
       "Content-Type": "application/json"
     };
@@ -35,9 +50,13 @@ class RestApiBuilder {
   }
 
   Future<Response> get({required RestOptions restOptions}) async {
-    Map<String, String> auth = await buildAuthHeader();
+    CognitoAuthSession session = await getCurrentSession();
+    Map<String, String> auth = await buildAuthHeader(session);
     Map<String, String> header = new HashMap.from(auth);
-    var _url = Uri.parse(baseUrl + restOptions.path);
+    var _url = Uri.parse(baseUrl + '/vendor/${session.userSub}' + restOptions.path);
+    print('************************');
+    print(header);
+    print('************************');
     final response =
     await http.get(_url, headers: header);
     var parsed = json.decode(response.body);
@@ -46,9 +65,10 @@ class RestApiBuilder {
   }
 
   Future<Response> post({required RestOptions restOptions}) async {
-    Map<String, String> auth = await buildAuthHeader();
+    CognitoAuthSession session = await getCurrentSession();
+    Map<String, String> auth = await buildAuthHeader(session);
     Map<String, String> header = new HashMap.from(auth);
-    var _url = Uri.parse(baseUrl + restOptions.path);
+    var _url = Uri.parse(baseUrl + '/vendor/${session.userSub}' + restOptions.path);
     final response =
       await http.post(_url, headers: header, body: restOptions.body);
     var parsed = json.decode(response.body);

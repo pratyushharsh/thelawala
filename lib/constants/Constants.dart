@@ -21,4 +21,6 @@ class Constants {
     'https://img.etimg.com/thumb/width-640,height-480,imgsize-10253,resizemode-1,msid-30666658/industry/cons-products/food/foodpanda-partners-with-openrice-to-offer-instant-food-reviews.jpg'
   ];
   static const String DUMMY_REVIEW = 'They are great for any meal, but I had breakfast there this time. Such a selection including creamed chipped beef, biscuits and gravy, potato pancakes, waffles, pancakes, egg scrambles, eggs benedict, and so much more. It has charming Cape style decor with a series of small rooms and little nooks and crannies, a bar area, and outdoor seating with shade.';
+
+  static const String ITEM_DESCRIPTION = 'A grilled grilled corn Arepa with our seasoned chicken, mozzarella cheese, seasoned chicken, mozzarella cheese, seasoned chicken, mozzarella cheese,';
 }

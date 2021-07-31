@@ -6,6 +6,14 @@ class ItemModifierState {
   final bool multipleSelectionAllowed;
   final List<ModifierItem> items;
 
+  get isValid {
+    var _valid = false;
+    if (groupName.isNotEmpty && items.length > 0) {
+      _valid = true;
+    }
+    return _valid;
+  }
+
   ItemModifierState(
       {required this.groupName,
       required this.mustSelect,

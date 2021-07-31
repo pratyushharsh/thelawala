@@ -138,26 +138,26 @@ class BasicDetailCard extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (state.userDetail?.contact.phone != null)
-                            buildDetailRow(Icon(Icons.phone), '${state.userDetail?.contact.phone}'),
+                          if (state.userDetail?.phone != null)
+                            buildDetailRow(Icon(Icons.phone), '${state.userDetail?.phone}'),
 
-                          if (state.userDetail?.contact.website != null)
-                            buildDetailRow(FaIcon(FontAwesomeIcons.globe), '${state.userDetail?.contact.website}'),
+                          if (state.userDetail?.website != null)
+                            buildDetailRow(FaIcon(FontAwesomeIcons.globe), '${state.userDetail?.website}'),
 
-                          if (state.userDetail?.contact.email != null)
-                            buildDetailRow(FaIcon(FontAwesomeIcons.envelope), '${state.userDetail?.contact.email}'),
+                          if (state.userDetail?.email != null)
+                            buildDetailRow(FaIcon(FontAwesomeIcons.envelope), '${state.userDetail?.email}'),
 
-                          if (state.userDetail?.social.facebook != null)
-                            buildDetailRow(FaIcon(FontAwesomeIcons.facebook), '${state.userDetail?.social.facebook}'),
+                          if (state.userDetail?.facebook != null)
+                            buildDetailRow(FaIcon(FontAwesomeIcons.facebook), '${state.userDetail?.facebook}'),
 
-                          if (state.userDetail?.social.instagram != null)
-                            buildDetailRow(FaIcon(FontAwesomeIcons.instagram), '${state.userDetail?.social.instagram}'),
+                          if (state.userDetail?.instagram != null)
+                            buildDetailRow(FaIcon(FontAwesomeIcons.instagram), '${state.userDetail?.instagram}'),
 
-                          if (state.userDetail?.social.youtube != null)
-                            buildDetailRow(FaIcon(FontAwesomeIcons.youtube), '${state.userDetail?.social.youtube}'),
+                          if (state.userDetail?.youtube != null)
+                            buildDetailRow(FaIcon(FontAwesomeIcons.youtube), '${state.userDetail?.youtube}'),
 
-                          if (state.userDetail?.social.twitter != null)
-                            buildDetailRow(FaIcon(FontAwesomeIcons.twitter), '${state.userDetail?.social.twitter}'),
+                          if (state.userDetail?.twitter != null)
+                            buildDetailRow(FaIcon(FontAwesomeIcons.twitter), '${state.userDetail?.twitter}'),
 
                           Padding(
                             padding: const EdgeInsets.only(

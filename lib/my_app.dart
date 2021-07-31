@@ -1,5 +1,6 @@
 import 'package:thelawala/core/auth/authentication/repository/authentication_repository.dart';
 import 'package:thelawala/core/home/screen/bloc/home_bloc.dart';
+import 'package:thelawala/modules/category/bloc/category_bloc.dart';
 import 'package:thelawala/utils/helpers/rest-api.dart';
 
 import 'config/routes/route_config.dart';
@@ -16,14 +17,15 @@ class MyApp extends StatelessWidget {
       providers: [
         RepositoryProvider(
             create: (_) => RestApiBuilder(
-                "https://60o6i0j753.execute-api.ap-south-1.amazonaws.com/alpha")),
+                "https://4hz6brkc59.execute-api.ap-south-1.amazonaws.com/dev")),
         RepositoryProvider(create: (_) => AuthenticationRepository()),
       ],
       child: MultiBlocProvider(providers: [
         BlocProvider(
           create: (_) => AuthenticationBloc()..add(InitialAuthEvent()),
         ),
-        BlocProvider(lazy: false, create: (ctx) => HomeBloc(RepositoryProvider.of(ctx)))
+        BlocProvider(lazy: false, create: (ctx) => HomeBloc(RepositoryProvider.of(ctx))),
+        BlocProvider(lazy: false, create: (ctx) => CategoryBloc(RepositoryProvider.of(ctx))),
       ], child: AppView()),
     );
   }
