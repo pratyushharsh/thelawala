@@ -6,6 +6,7 @@ import 'package:thelawala/core/auth/register/screen/otp_verification_screen.dart
 import 'package:thelawala/core/auth/register/screen/register_screen.dart';
 import 'package:thelawala/core/home/screen/home_screen.dart';
 import 'package:thelawala/models/response/category-response.dart';
+import 'package:thelawala/models/response/menu-item-response.dart';
 import 'package:thelawala/modules/category/add_new_category.dart';
 import 'package:thelawala/modules/category/category_screen.dart';
 import 'package:thelawala/modules/dashboard/update-profile/update-profile.dart';
@@ -25,6 +26,7 @@ class RouteConfig {
 
   static const String MENU_SCREEN = '/menu-screen';
   static const String ADD_NEW_PRODUCT = '/add-menu-item';
+  static const String UPDATE_PRODUCT = '/update-item';
   static const String NEW_ITEM_MODIFIER = '/new-item-modifier';
 
   static const String ADD_NEW_CATEGORY = '/add-new-category';
@@ -48,7 +50,11 @@ class RouteConfig {
       case UPDATE_USER_PROFILE:
         return MaterialPageRoute(builder: (_) => UpdateUserProfile());
       case ADD_NEW_PRODUCT:
-        return MaterialPageRoute(builder: (_) => AddMenuItemScreen());
+        var category = settings.arguments as String;
+        return MaterialPageRoute(builder: (_) => AddMenuItemScreen(categoryId: category,));
+      case UPDATE_PRODUCT:
+        var item = settings.arguments as MenuItemResponse;
+        return MaterialPageRoute(builder: (_) => AddMenuItemScreen(categoryId: item.category, isUpdate: true, item: item,));
       case NEW_ITEM_MODIFIER:
         return MaterialPageRoute(builder: (_) => NewItemModifier());
       case ADD_NEW_CATEGORY:

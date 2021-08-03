@@ -5,20 +5,29 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:thelawala/config/routes/route_config.dart';
 import 'package:thelawala/constants/Constants.dart';
 import 'package:thelawala/models/pojo/menu_modal.dart';
+import 'package:thelawala/models/response/menu-item-response.dart';
 import 'package:thelawala/widgets/custom_switch.dart';
 import 'package:thelawala/widgets/custom_text_field.dart';
 import 'package:thelawala/widgets/header-card.dart';
 
 import 'bloc/new_menu_bloc.dart';
+import '../../../utils/extension/input-string-extension.dart';
 
 class AddMenuItemScreen extends StatelessWidget {
-  const AddMenuItemScreen({Key? key}) : super(key: key);
+  final String categoryId;
+  final bool isUpdate;
+  final MenuItemResponse? item;
+  const AddMenuItemScreen(
+      {Key? key, required this.categoryId, this.isUpdate = false, this.item})
+      : assert(isUpdate && item != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       lazy: false,
-      create: (_) => NewMenuBloc(),
+      create: (ctx) => NewMenuBloc(RepositoryProvider.of(ctx), categoryId,
+          existingItem: item),
       child: Scaffold(
         backgroundColor: tScaffoldColor,
         appBar: AppBar(
@@ -29,53 +38,91 @@ class AddMenuItemScreen extends StatelessWidget {
             },
             child: Icon(Icons.close),
           ),
-          title: Text("Add New Product"),
+          title: Text(isUpdate ? "Update Product" : "Add New Product"),
           actions: [
             Container(
               padding: EdgeInsets.all(8),
-              child: OutlinedButton(
-                onPressed: () {},
-                child: Text('Save'),
-              ),
+              child: BlocBuilder<NewMenuBloc, NewMenuState>(
+                  builder: (context, state) {
+                return isUpdate
+                    ? OutlinedButton(
+                        onPressed: state.isValid ? () {} : null,
+                        child: Text('Update'),
+                      )
+                    : OutlinedButton(
+                        onPressed: state.isValid
+                            ? () {
+                                BlocProvider.of<NewMenuBloc>(context)
+                                    .add(OnCreateNewMenuItem());
+                              }
+                            : null,
+                        child: Text('Save'),
+                      );
+              }),
             )
           ],
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 30,
-              ),
-              Container(
+        body: BlocListener<NewMenuBloc, NewMenuState>(
+          listener: (BuildContext context, state) {
+            if (NewMenuStatus.LOADING == state.status) {
+              Dialog errorDialog = Dialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(12.0)), //this right here
                 child: Container(
-                  decoration: new BoxDecoration(
-                    border: Border.all(width: 1, style: BorderStyle.solid),
-                  ),
-                  child: SizedBox(
-                    height: 150,
-                    width: 150,
+                  height: 200.0,
+                  width: 100.0,
+                  child: Center(
+                    child: CircularProgressIndicator(),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              BasicItemDetail(),
-              HeaderCard(
-                title: "Tags",
-                subtitle: "Add few tags so people can search using tags.",
-              ),
-              ProductTags(),
-              HeaderCard(
-                title: "Modifiers",
-                subtitle:
-                    "Let Your Customer customize their order the way they want.",
-              ),
-              Modifier(),
-              SizedBox(
-                height: 100,
-              )
-            ],
+              );
+              showDialog(
+                  barrierDismissible: false,
+                  context: context,
+                  builder: (BuildContext context) => errorDialog);
+            } else if (NewMenuStatus.SUCCESS == state.status) {
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+            }
+          },
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 30,
+                ),
+                Container(
+                  child: Container(
+                    decoration: new BoxDecoration(
+                      border: Border.all(width: 1, style: BorderStyle.solid),
+                    ),
+                    child: SizedBox(
+                      height: 150,
+                      width: 150,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                BasicItemDetail(),
+                HeaderCard(
+                  title: "Tags",
+                  subtitle: "Add few tags so people can search using tags.",
+                ),
+                ProductTags(),
+                HeaderCard(
+                  title: "Modifiers",
+                  subtitle:
+                      "Let Your Customer customize their order the way they want.",
+                ),
+                Modifier(),
+                SizedBox(
+                  height: 100,
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -102,47 +149,58 @@ class BasicItemDetail extends StatelessWidget {
           right: 12,
           top: 12,
         ),
-        child: BlocBuilder<NewMenuBloc, NewMenuState>(
-          builder: (context, state) {
-            return Column(
-              children: [
-                CustomTextField(
-                  initialValue: state.name,
-                  label: "Item Name",
-                  helperText: "Item Name Which You Would Like Your Customer To See",
-                  onValueChange: (val) {
-                    BlocProvider.of<NewMenuBloc>(context).add(OnItemNameChange(val));
-                  },
-                ),
-                CustomTextField(
-                  initialValue: state.price.toStringAsFixed(2),
-                  label: "Price",
-                  icon: SizedBox(
-                      height: 24,
-                      width: 24,
-                      child: Center(child: FaIcon(CupertinoIcons.money_dollar))),
-                  textInputType: TextInputType.number,
-                  onValueChange: (val) {
-                    BlocProvider.of<NewMenuBloc>(context).add(OnPriceChange(double.parse(val)));
-                  },
-                ),
-                CustomTextField(
-                  initialValue: state.description,
-                  label: "Description",
-                  helperText: "More About ingredients in food.",
-                  minLines: 4,
-                  maxLines: 6,
-                  onValueChange: (val) {
-                    BlocProvider.of<NewMenuBloc>(context).add(OnDescriptionChange(val));
-                  },
-                ),
-                CustomSwitch(value: state.active, label: "Active", onChange: (val) {
-                  BlocProvider.of<NewMenuBloc>(context).add(OnActiveChange(val));
-                }),
-              ],
-            );
-          }
-        ),
+        child:
+            BlocBuilder<NewMenuBloc, NewMenuState>(builder: (context, state) {
+          return Column(
+            children: [
+              CustomTextField(
+                initialValue: state.name,
+                label: "Item Name",
+                errorText: state.name.validate(required: true),
+                helperText:
+                    "Item Name Which You Would Like Your Customer To See",
+                onValueChange: (val) {
+                  BlocProvider.of<NewMenuBloc>(context)
+                      .add(OnItemNameChange(val));
+                },
+              ),
+              CustomTextField(
+                initialValue: double.tryParse(state.price) != null
+                    ? double.parse(state.price).toStringAsFixed(2)
+                    : state.price,
+                label: "Price",
+                errorText: state.price.toString().validate(required: true),
+                icon: SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: Center(child: FaIcon(CupertinoIcons.money_dollar))),
+                textInputType: TextInputType.number,
+                onValueChange: (val) {
+                  BlocProvider.of<NewMenuBloc>(context).add(OnPriceChange(val));
+                },
+              ),
+              CustomTextField(
+                initialValue: state.description,
+                label: "Description",
+                helperText: "More About ingredients in food.",
+                errorText: state.description.validate(required: true),
+                minLines: 4,
+                maxLines: 6,
+                onValueChange: (val) {
+                  BlocProvider.of<NewMenuBloc>(context)
+                      .add(OnDescriptionChange(val));
+                },
+              ),
+              CustomSwitch(
+                  value: state.active,
+                  label: "Active",
+                  onChange: (val) {
+                    BlocProvider.of<NewMenuBloc>(context)
+                        .add(OnActiveChange(val));
+                  }),
+            ],
+          );
+        }),
       ),
     );
   }
@@ -247,10 +305,12 @@ class Modifier extends StatelessWidget {
                   Navigator.of(context)
                       .pushNamed(RouteConfig.NEW_ITEM_MODIFIER)
                       .then((value) => {
-                        if (value != null && value is List) {
-                          BlocProvider.of<NewMenuBloc>(context).add(AddNewModifier(value[0]))
-                        }
-                  });
+                            if (value != null && value is List)
+                              {
+                                BlocProvider.of<NewMenuBloc>(context)
+                                    .add(AddNewModifier(value[0]))
+                              }
+                          });
                 },
                 child: Container(
                   width: double.infinity,

@@ -4,12 +4,22 @@ enum NewMenuStatus { INITIAL, LOADING, SUCCESS, FAILURE }
 
 class NewMenuState {
   final String name;
-  final double price;
+  final String price;
   final String description;
   final List<String> tags;
   final List<MenuItemModifier> modifier;
   final bool active;
   final NewMenuStatus status;
+
+  get isValid {
+    bool _isValid = true;
+
+    if (name.isEmpty || description.isEmpty || price.isEmpty) {
+      _isValid = false;
+    }
+
+    return _isValid;
+  }
 
   NewMenuState(
       {required this.name,
@@ -22,7 +32,7 @@ class NewMenuState {
 
   NewMenuState copyWith(
       {String? name,
-      double? price,
+      String? price,
       bool? active,
       String? description,
       NewMenuStatus? status,

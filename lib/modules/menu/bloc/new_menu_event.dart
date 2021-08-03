@@ -16,7 +16,7 @@ class OnItemNameChange extends NewMenuEvent {
 }
 
 class OnPriceChange extends NewMenuEvent {
-  final double price;
+  final String price;
   OnPriceChange(this.price);
 }
 
@@ -33,3 +33,5 @@ class OnActiveChange extends NewMenuEvent {
 }
 
 class OnCreateNewMenuItem extends NewMenuEvent {}
+
+class UpdateExistingProduct extends NewMenuEvent {}

@@ -7,7 +7,7 @@ class MenuItemResponse {
   late String description;
   late List<String> tags;
   late bool active;
-  late List<Modifiers> modifiers;
+  late List<ResponseModifiers> modifiers;
 
   MenuItemResponse(
       { required this.vendorid,
@@ -32,7 +32,7 @@ class MenuItemResponse {
     if (json['modifiers'] != null) {
       modifiers = List.empty(growable: true);
       json['modifiers'].forEach((v) {
-        modifiers.add(Modifiers.fromJson(v));
+        modifiers.add(ResponseModifiers.fromJson(v));
       });
     }
   }
@@ -54,26 +54,26 @@ class MenuItemResponse {
   }
 }
 
-class Modifiers {
+class ResponseModifiers {
   late String groupName;
   late bool mustSelect;
   late bool multipleSelectionAllowed;
-  late List<ModifierItems> modifierItems;
+  late List<ResponseModifierItems> modifierItems;
 
-  Modifiers(
+  ResponseModifiers(
       { required this.groupName,
         required this.mustSelect,
         required this.multipleSelectionAllowed,
         required this.modifierItems});
 
-  Modifiers.fromJson(Map<String, dynamic> json) {
+  ResponseModifiers.fromJson(Map<String, dynamic> json) {
     groupName = json['groupName'];
     mustSelect = json['mustSelect'];
     multipleSelectionAllowed = json['multipleSelectionAllowed'];
     if (json['modifierItems'] != null) {
       modifierItems = List.empty(growable: true);
       json['modifierItems'].forEach((v) {
-        modifierItems.add(new ModifierItems.fromJson(v));
+        modifierItems.add(new ResponseModifierItems.fromJson(v));
       });
     }
   }
@@ -89,13 +89,13 @@ class Modifiers {
   }
 }
 
-class ModifierItems {
+class ResponseModifierItems {
   late String itemName;
   late double price;
 
-  ModifierItems({required this.itemName, required  this.price});
+  ResponseModifierItems({required this.itemName, required  this.price});
 
-  ModifierItems.fromJson(Map<String, dynamic> json) {
+  ResponseModifierItems.fromJson(Map<String, dynamic> json) {
     itemName = json['itemName'];
     price = json['price'].toDouble();
   }

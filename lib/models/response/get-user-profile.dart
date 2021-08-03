@@ -1,3 +1,5 @@
+import 'package:thelawala/models/response/image-response.dart';
+
 class UserProfileResponse {
   late String vendorid;
   late String name;
@@ -12,6 +14,7 @@ class UserProfileResponse {
   late String twitter;
   late List<String> cuisines;
   late List<String> cities;
+  late Images logo;
 
   UserProfileResponse(
       { required this.vendorid,
@@ -26,7 +29,8 @@ class UserProfileResponse {
         required this.youtube,
         required this.twitter,
         required this.cuisines,
-        required this.cities});
+        required this.cities,
+        required this.logo });
 
   UserProfileResponse.fromJson(Map<String, dynamic> json) {
     vendorid = json['vendorid'];
@@ -42,6 +46,7 @@ class UserProfileResponse {
     twitter = json['twitter'];
     cuisines = json['cuisines']?.cast<String>() ?? [];
     cities = json['cities']?.cast<String>() ?? [];
+    logo = Images.fromJson(json['logo']!);
   }
 
   Map<String, dynamic> toJson() {

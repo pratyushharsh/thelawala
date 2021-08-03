@@ -1,9 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:thelawala/constants/Constants.dart';
 import 'package:thelawala/core/home/screen/bloc/home_bloc.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:thelawala/utils/helpers/rest-api.dart';
+import 'package:http/http.dart' as http;
+
 
 class ProfileCard extends StatelessWidget {
   const ProfileCard({Key? key}) : super(key: key);
@@ -155,12 +161,7 @@ class ProfileCard extends StatelessWidget {
               Positioned(
                 top: 0,
                 left: 15,
-                child: CircleAvatar(
-                  radius: 30,
-                  backgroundImage: NetworkImage(
-                    Constants.DUMMY_IMAGE_BANNER,
-                  ),
-                ),
+                child: Logo(url: state.userDetail!.logo.large,)
               )
             ],
           ),
@@ -169,5 +170,69 @@ class ProfileCard extends StatelessWidget {
 
       return Container();
     });
+  }
+}
+
+class Logo extends StatefulWidget {
+  final String url;
+  const Logo({Key? key, required this.url}) : super(key: key);
+
+  @override
+  _LogoState createState() => _LogoState();
+}
+
+class _LogoState extends State<Logo> {
+
+  late RestApiBuilder api;
+  final ImagePicker _picker = ImagePicker();
+  XFile? image;
+
+  onLogoTap() async {
+    XFile? _image = await _picker.pickImage(source: ImageSource.camera, imageQuality: 30);
+    print(_image?.path);
+    setState(() {
+      image = _image;
+      uploadImage();
+    });
+  }
+  @override
+  void initState() {
+    super.initState();
+    api = RepositoryProvider.of(context);
+  }
+
+  void uploadImage() async {
+    if (image == null) return;
+    RestOptions option = RestOptions(path: "/logo");
+    try {
+      var rawResponse = await api.get(restOptions: option);
+      var resp = api.parsedResponse(rawResponse);
+      var _uploadUrl = resp['uploadURL'];
+      var _fileName = resp['filename'];
+      print(_fileName);
+      File _tmpFile = File(image!.path);
+      var uploadResponse = await http.put(Uri.parse(_uploadUrl), body: _tmpFile.readAsBytesSync());
+      print(uploadResponse.body);
+    } catch (e) {
+      print('**********Error**********');
+      print(e);
+      print('**********Error**********');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onLogoTap,
+      child: image == null ? CircleAvatar(
+        radius: 30,
+        backgroundImage: NetworkImage(
+          widget.url,
+        ),
+      ) : CircleAvatar(
+        radius: 30,
+        backgroundImage: FileImage(File(image!.path)),
+      ),
+    );
   }
 }

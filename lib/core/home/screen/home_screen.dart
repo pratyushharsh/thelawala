@@ -3,11 +3,9 @@ import 'package:thelawala/constants/Constants.dart';
 import 'package:thelawala/core/settings/settings.dart';
 import 'package:thelawala/modules/category/category_screen.dart';
 import 'package:thelawala/modules/dashboard/detail/dashboard-detail.dart';
-import 'package:thelawala/modules/menu/menu_screen.dart';
 import 'package:thelawala/modules/orders/order-detail.dart';
 import 'package:thelawala/utils/services/menu-service.dart';
 
-import 'bloc/home_bloc.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
