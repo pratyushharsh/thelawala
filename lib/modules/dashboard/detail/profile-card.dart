@@ -10,7 +10,6 @@ import 'package:shimmer/shimmer.dart';
 import 'package:thelawala/utils/helpers/rest-api.dart';
 import 'package:http/http.dart' as http;
 
-
 class ProfileCard extends StatelessWidget {
   const ProfileCard({Key? key}) : super(key: key);
 
@@ -22,8 +21,8 @@ class ProfileCard extends StatelessWidget {
             padding: EdgeInsets.only(top: 25),
             width: double.infinity,
             child: Card(
-               shape: RoundedRectangleBorder(
-                   borderRadius: BorderRadius.all(Radius.circular(12))),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12))),
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Container(
@@ -31,7 +30,9 @@ class ProfileCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 30,),
+                      SizedBox(
+                        height: 30,
+                      ),
                       Shimmer.fromColors(
                         baseColor: Colors.grey[500]!,
                         highlightColor: Colors.grey[100]!,
@@ -42,7 +43,9 @@ class ProfileCard extends StatelessWidget {
                           width: 180,
                         ),
                       ),
-                      SizedBox(height: 10,),
+                      SizedBox(
+                        height: 10,
+                      ),
                       Shimmer.fromColors(
                         baseColor: Colors.grey[500]!,
                         highlightColor: Colors.grey[100]!,
@@ -53,7 +56,9 @@ class ProfileCard extends StatelessWidget {
                           width: 220,
                         ),
                       ),
-                      SizedBox(height: 10,),
+                      SizedBox(
+                        height: 10,
+                      ),
                       Shimmer.fromColors(
                         baseColor: Colors.grey[500]!,
                         highlightColor: Colors.grey[100]!,
@@ -76,16 +81,14 @@ class ProfileCard extends StatelessWidget {
             child: Shimmer.fromColors(
               baseColor: Colors.grey[300]!,
               highlightColor: Colors.grey[100]!,
-              child: CircleAvatar(
-                radius: 30
-              ),
+              child: CircleAvatar(radius: 30),
             ),
           )
         ],
       ),
     );
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
@@ -159,10 +162,13 @@ class ProfileCard extends StatelessWidget {
                 ),
               ),
               Positioned(
-                top: 0,
-                left: 15,
-                child: Logo(url: state.userDetail!.logo.large,)
-              )
+                  top: 0,
+                  left: 15,
+                  child: state.userDetail!.logo != null
+                      ? Logo(
+                          url: state.userDetail!.logo!.large,
+                        )
+                      : Logo(url: Constants.DUMMY_IMAGE))
             ],
           ),
         );
@@ -182,19 +188,20 @@ class Logo extends StatefulWidget {
 }
 
 class _LogoState extends State<Logo> {
-
   late RestApiBuilder api;
   final ImagePicker _picker = ImagePicker();
   XFile? image;
 
   onLogoTap() async {
-    XFile? _image = await _picker.pickImage(source: ImageSource.camera, imageQuality: 30);
+    XFile? _image =
+        await _picker.pickImage(source: ImageSource.camera, imageQuality: 30);
     print(_image?.path);
     setState(() {
       image = _image;
       uploadImage();
     });
   }
+
   @override
   void initState() {
     super.initState();
@@ -211,7 +218,8 @@ class _LogoState extends State<Logo> {
       var _fileName = resp['filename'];
       print(_fileName);
       File _tmpFile = File(image!.path);
-      var uploadResponse = await http.put(Uri.parse(_uploadUrl), body: _tmpFile.readAsBytesSync());
+      var uploadResponse = await http.put(Uri.parse(_uploadUrl),
+          body: _tmpFile.readAsBytesSync());
       print(uploadResponse.body);
     } catch (e) {
       print('**********Error**********');
@@ -224,15 +232,17 @@ class _LogoState extends State<Logo> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onLogoTap,
-      child: image == null ? CircleAvatar(
-        radius: 30,
-        backgroundImage: NetworkImage(
-          widget.url,
-        ),
-      ) : CircleAvatar(
-        radius: 30,
-        backgroundImage: FileImage(File(image!.path)),
-      ),
+      child: image == null
+          ? CircleAvatar(
+              radius: 30,
+              backgroundImage: NetworkImage(
+                widget.url,
+              ),
+            )
+          : CircleAvatar(
+              radius: 30,
+              backgroundImage: FileImage(File(image!.path)),
+            ),
     );
   }
 }

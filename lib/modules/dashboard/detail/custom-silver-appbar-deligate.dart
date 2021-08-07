@@ -58,8 +58,8 @@ class CustomSilverAppBarDelegate extends SliverPersistentHeaderDelegate {
                 tag: "profile-logo",
                 child: CircleAvatar(
                   // radius: 20,
-                  backgroundImage: user != null ? NetworkImage(
-                    user.logo.large,
+                  backgroundImage: (user != null && user.logo != null) ? NetworkImage(
+                    user.logo!.large,
                   ) : NetworkImage(
                     Constants.DUMMY_IMAGE_BANNER,
                   ),

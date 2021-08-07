@@ -1,5 +1,6 @@
 import 'package:thelawala/core/auth/authentication/repository/authentication_repository.dart';
 import 'package:thelawala/core/home/screen/bloc/home_bloc.dart';
+import 'package:thelawala/core/settings/bloc/settings_bloc.dart';
 import 'package:thelawala/modules/category/bloc/category_bloc.dart';
 import 'package:thelawala/utils/helpers/rest-api.dart';
 
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(lazy: false, create: (ctx) => HomeBloc(RepositoryProvider.of(ctx))),
         BlocProvider(lazy: false, create: (ctx) => CategoryBloc(RepositoryProvider.of(ctx))),
+        BlocProvider(lazy: false, create: (ctx) => SettingsBloc()..add(GetCurrentLocation()))
       ], child: AppView()),
     );
   }
@@ -55,22 +57,28 @@ class _AppViewState extends State<AppView> {
       )),
       navigatorKey: _navigatorKey,
       builder: (context, child) {
-        return BlocListener<AuthenticationBloc, AuthenticationState>(
-            listener: (context, state) {
-              switch (state.status) {
-                case AuthenticationStatus.AUTHENTICATED:
-                  _navigator?.pushNamedAndRemoveUntil(
-                      RouteConfig.HOME_PAGE, (route) => false);
-                  break;
-                case AuthenticationStatus.UNAUTHENTICATED:
-                  _navigator?.pushNamedAndRemoveUntil(
-                      RouteConfig.LOGIN_PAGE, (route) => false);
-                  break;
-                default:
-                  break;
-              }
-            },
-            child: child);
+        return BlocListener<SettingsBloc, SettingsState>(
+          listener: (ctx, settingState) {
+
+          },
+          child: BlocListener<AuthenticationBloc, AuthenticationState>(
+              listener: (context, state) {
+                switch (state.status) {
+                  case AuthenticationStatus.AUTHENTICATED:
+                    _navigator?.pushNamedAndRemoveUntil(
+                        RouteConfig.HOME_PAGE, (route) => false);
+                    break;
+                  case AuthenticationStatus.UNAUTHENTICATED:
+                    _navigator?.pushNamedAndRemoveUntil(
+                        RouteConfig.LOGIN_PAGE, (route) => false);
+                    break;
+                  default:
+                    break;
+                }
+              },
+              child: child
+          ),
+        );
       },
       onGenerateRoute: RouteConfig.onGenerateRoute,
     );

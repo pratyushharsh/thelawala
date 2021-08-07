@@ -55,7 +55,14 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
       yield state;
     } else if (event is AuthenticationUserChanged) {
       yield _mapAuthenticationUserChangedToState(event);
+    } else if (event is SignOutUser) {
+      yield* _mapSignOutUser();
     }
+  }
+
+  Stream<AuthenticationState> _mapSignOutUser() async* {
+    await Amplify.Auth.signOut();
+    yield AuthenticationState.unauthenticated();
   }
 
   mapOtherUserProperties(List<AuthUserAttribute> attr, ) {
@@ -83,4 +90,6 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
         ? AuthenticationState.authenticated(event.user)
         : const AuthenticationState.unauthenticated();
   }
+
+
 }

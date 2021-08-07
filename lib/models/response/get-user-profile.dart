@@ -14,7 +14,7 @@ class UserProfileResponse {
   late String twitter;
   late List<String> cuisines;
   late List<String> cities;
-  late Images logo;
+  late Images? logo;
 
   UserProfileResponse(
       { required this.vendorid,
@@ -35,18 +35,18 @@ class UserProfileResponse {
   UserProfileResponse.fromJson(Map<String, dynamic> json) {
     vendorid = json['vendorid'];
     name = json['name'];
-    tagline = json['tagline'];
-    introduction = json['introduction'];
-    email = json['email'];
-    phone = json['phone'];
-    website = json['website'];
-    facebook = json['facebook'];
-    instagram = json['instagram'];
-    youtube = json['youtube'];
-    twitter = json['twitter'];
+    tagline = json['tagline'] ?? '';
+    introduction = json['introduction'] ?? '';
+    email = json['email'] ?? '';
+    phone = json['phone'] ?? '';
+    website = json['website'] ?? '';
+    facebook = json['facebook'] ?? '';
+    instagram = json['instagram'] ?? '';
+    youtube = json['youtube'] ?? '';
+    twitter = json['twitter'] ?? '';
     cuisines = json['cuisines']?.cast<String>() ?? [];
     cities = json['cities']?.cast<String>() ?? [];
-    logo = Images.fromJson(json['logo']!);
+    logo = json['logo'] != null ? Images.fromJson(json['logo']) : null;
   }
 
   Map<String, dynamic> toJson() {

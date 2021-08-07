@@ -11,3 +11,4 @@ class AuthenticationUserChanged extends AuthenticationEvent {
   AuthenticationUserChanged(this.user);
 }
 
+class SignOutUser extends AuthenticationEvent {}
