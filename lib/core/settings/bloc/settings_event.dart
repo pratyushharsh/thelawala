@@ -4,3 +4,5 @@ part of 'settings_bloc.dart';
 abstract class SettingsEvent {}
 
 class GetCurrentLocation extends SettingsEvent {}
+
+class UpdateCurrentLocationToServer extends SettingsEvent {}

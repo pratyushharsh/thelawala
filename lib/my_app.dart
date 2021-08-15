@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(lazy: false, create: (ctx) => HomeBloc(RepositoryProvider.of(ctx))),
         BlocProvider(lazy: false, create: (ctx) => CategoryBloc(RepositoryProvider.of(ctx))),
-        BlocProvider(lazy: false, create: (ctx) => SettingsBloc()..add(GetCurrentLocation()))
+        BlocProvider(lazy: false, create: (ctx) => SettingsBloc(RepositoryProvider.of(ctx))..add(GetCurrentLocation()))
       ], child: AppView()),
     );
   }
