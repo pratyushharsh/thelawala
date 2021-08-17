@@ -19,7 +19,7 @@ class AddMenuItemScreen extends StatelessWidget {
   final MenuItemResponse? item;
   const AddMenuItemScreen(
       {Key? key, required this.categoryId, this.isUpdate = false, this.item})
-      : assert(isUpdate && item != null),
+      : assert(isUpdate ? item != null : true),
         super(key: key);
 
   @override

@@ -15,6 +15,8 @@ class UserProfileResponse {
   late List<String> cuisines;
   late List<String> cities;
   late Images? logo;
+  late Location? currentLocation;
+  late DateTime? locationUpdateTime;
 
   UserProfileResponse(
       { required this.vendorid,
@@ -47,6 +49,8 @@ class UserProfileResponse {
     cuisines = json['cuisines']?.cast<String>() ?? [];
     cities = json['cities']?.cast<String>() ?? [];
     logo = json['logo'] != null ? Images.fromJson(json['logo']) : null;
+    currentLocation = json['currentLocation'] != null ? Location.fromJson(json['currentLocation']) : null;
+    locationUpdateTime = json['lastLocationUpdateTime'] != null ? DateTime.tryParse(json['lastLocationUpdateTime']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -65,5 +69,17 @@ class UserProfileResponse {
     data['cuisines'] = this.cuisines;
     data['cities'] = this.cities;
     return data;
+  }
+}
+
+class Location {
+  late double latitude;
+  late double longitude;
+
+  Location({required this.latitude, required this.longitude});
+
+  Location.fromJson(Map<String, dynamic> json) {
+    latitude = json['latitude'];
+    longitude = json['longitude'];
   }
 }
