@@ -11,6 +11,7 @@ class NewMenuState {
   final bool active;
   final NewMenuStatus status;
   final File? image;
+  final String? imageUrl;
 
   get isValid {
     bool _isValid = true;
@@ -30,7 +31,8 @@ class NewMenuState {
       required this.tags,
       required this.status,
       required this.modifier,
-      this.image});
+      this.image,
+      this.imageUrl});
 
   NewMenuState copyWith(
       {String? name,
@@ -40,7 +42,8 @@ class NewMenuState {
       NewMenuStatus? status,
       List<String>? tags,
       List<MenuItemModifier>? modifier,
-      File? image}) {
+      File? image,
+      String? imageUrl}) {
     return NewMenuState(
         active: active ?? this.active,
         name: name ?? this.name,
@@ -49,6 +52,7 @@ class NewMenuState {
         description: description ?? this.description,
         tags: tags ?? this.tags,
         modifier: modifier ?? this.modifier,
-        image: image ?? this.image);
+        image: image ?? this.image,
+        imageUrl: imageUrl ?? this.imageUrl);
   }
 }

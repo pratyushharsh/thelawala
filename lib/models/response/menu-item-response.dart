@@ -1,3 +1,5 @@
+import 'image-response.dart';
+
 class MenuItemResponse {
   late String vendorid;
   late String category;
@@ -7,6 +9,7 @@ class MenuItemResponse {
   late String description;
   late List<String> tags;
   late bool active;
+  late Images? image;
   late List<ResponseModifiers> modifiers;
 
   MenuItemResponse(
@@ -18,7 +21,8 @@ class MenuItemResponse {
         required this.description,
         required this.tags,
         required this.active,
-        required this.modifiers});
+        required this.modifiers,
+        required this.image});
 
   MenuItemResponse.fromJson(Map<String, dynamic> json) {
     vendorid = json['vendorid'];
@@ -29,6 +33,7 @@ class MenuItemResponse {
     description = json['description'];
     tags = json['tags'].cast<String>();
     active = json['active'];
+    image = json['image'] != null ? Images.fromJson(json['image']) : null;
     if (json['modifiers'] != null) {
       modifiers = List.empty(growable: true);
       json['modifiers'].forEach((v) {

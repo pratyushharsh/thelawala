@@ -123,17 +123,8 @@ class AddMenuItemScreen extends StatelessWidget {
   }
 }
 
-class MenuItemImage extends StatefulWidget {
-  MenuItemImage({Key? key}) : super(key: key);
-
-  @override
-  _MenuItemImageState createState() => _MenuItemImageState();
-}
-
-class _MenuItemImageState extends State<MenuItemImage> {
+class MenuItemImage extends StatelessWidget {
   final ImagePicker _picker = ImagePicker();
-  XFile? image;
-
   // onLogoTap() async {
   //   print(_image?.path);
   //   setState(() {
@@ -171,62 +162,70 @@ class _MenuItemImageState extends State<MenuItemImage> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () async {
-        ImageSource? src = await showModalBottomSheet(
-          context: context,
-          builder: (ctx) {
-            return Container(
-                height: 150,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: buildButton(
-                          onTap: () {
-                            Navigator.of(ctx).pop(ImageSource.camera);
-                          },
-                          icon: Icons.camera_alt,
-                          title: "Camera"),
-                    ),
-                    Expanded(
-                      child: buildButton(
-                          onTap: () {
-                            Navigator.of(ctx).pop(ImageSource.gallery);
-                          },
-                          icon: Icons.file_copy_outlined,
-                          title: "Gallery"),
-                    ),
-                  ],
-                ));
+    return BlocBuilder<NewMenuBloc, NewMenuState>(
+      builder: (context, state) {
+        return InkWell(
+          onTap: () async {
+            ImageSource? src = await showModalBottomSheet(
+              context: context,
+              builder: (ctx) {
+                return Container(
+                    height: 150,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: buildButton(
+                              onTap: () {
+                                Navigator.of(ctx).pop(ImageSource.camera);
+                              },
+                              icon: Icons.camera_alt,
+                              title: "Camera"),
+                        ),
+                        Expanded(
+                          child: buildButton(
+                              onTap: () {
+                                Navigator.of(ctx).pop(ImageSource.gallery);
+                              },
+                              icon: Icons.file_copy_outlined,
+                              title: "Gallery"),
+                        ),
+                      ],
+                    ));
+              },
+            );
+            if (src != null) {
+              XFile? _image =
+                  await _picker.pickImage(source: src, imageQuality: 30);
+              BlocProvider.of<NewMenuBloc>(context)
+                  .add(UpdateMenuItemImage(File(_image!.path)));
+            }
           },
+          child: Container(
+            decoration: new BoxDecoration(
+              border: Border.all(width: 1, style: BorderStyle.solid),
+            ),
+            child: state.image != null
+                ? Image.file(
+                    File(state.image!.path),
+                    height: 150,
+                    width: 150,
+                    fit: BoxFit.cover,
+                  )
+                : state.imageUrl != null
+                    ? Image.network(
+                        state.imageUrl!,
+                        height: 150,
+                        width: 150,
+                      )
+                    : Image.network(
+                        Constants.DUMMY_IMAGE,
+                        height: 150,
+                        width: 150,
+                        fit: BoxFit.cover,
+                      ),
+          ),
         );
-        if (src != null) {
-          XFile? _image =
-              await _picker.pickImage(source: src, imageQuality: 30);
-          setState(() {
-            image = _image;
-            BlocProvider.of<NewMenuBloc>(context).add(UpdateMenuItemImage(File(_image!.path)));
-          });
-        }
       },
-      child: Container(
-        decoration: new BoxDecoration(
-          border: Border.all(width: 1, style: BorderStyle.solid),
-        ),
-        child: image != null
-            ? Image.file(
-                File(image!.path),
-                height: 150,
-                width: 150,
-                fit: BoxFit.cover,
-              )
-            : Image.network(
-                Constants.DUMMY_IMAGE,
-                height: 150,
-                width: 150,
-                fit: BoxFit.cover,
-              ),
-      ),
     );
   }
 }

@@ -79,7 +79,8 @@ class _ProductCardState extends State<ProductCard> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.of(context).pushNamed(RouteConfig.UPDATE_PRODUCT, arguments: widget.menuItem);
+        Navigator.of(context)
+            .pushNamed(RouteConfig.UPDATE_PRODUCT, arguments: widget.menuItem);
       },
       child: Card(
         shape: RoundedRectangleBorder(
@@ -94,12 +95,18 @@ class _ProductCardState extends State<ProductCard> {
                       topLeft: Radius.circular(10),
                       bottomLeft: Radius.circular(10),
                     ),
-                    child: Image.network(
-                      Constants.DUMMY_IMAGE,
-                      height: 100,
-                      width: 100,
-                      fit: BoxFit.cover,
-                    ),
+                    child: widget.menuItem.image != null
+                        ? Image.network(
+                            widget.menuItem.image!.medium,
+                            height: 100,
+                            width: 100,
+                          )
+                        : Image.network(
+                            Constants.DUMMY_IMAGE,
+                            height: 100,
+                            width: 100,
+                            fit: BoxFit.cover,
+                          ),
                   ),
                   Expanded(
                     child: Container(
@@ -153,8 +160,13 @@ class _ProductCardState extends State<ProductCard> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 10,),
-                      Text("Modifiers", style: TextStyle(fontWeight: FontWeight.bold),),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "Modifiers",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       ...widget.menuItem.modifiers
                           .map(
                             (e) => MenuItemModifierGroup(
