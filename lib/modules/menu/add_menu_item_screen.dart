@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:thelawala/config/routes/route_config.dart';
 import 'package:thelawala/constants/Constants.dart';
 import 'package:thelawala/models/pojo/menu_modal.dart';
@@ -27,7 +30,7 @@ class AddMenuItemScreen extends StatelessWidget {
     return BlocProvider(
       lazy: false,
       create: (ctx) => NewMenuBloc(RepositoryProvider.of(ctx), categoryId,
-          existingItem: item),
+          existingItem: item, isNew: false),
       child: Scaffold(
         backgroundColor: tScaffoldColor,
         appBar: AppBar(
@@ -92,17 +95,7 @@ class AddMenuItemScreen extends StatelessWidget {
                 SizedBox(
                   height: 30,
                 ),
-                Container(
-                  child: Container(
-                    decoration: new BoxDecoration(
-                      border: Border.all(width: 1, style: BorderStyle.solid),
-                    ),
-                    child: SizedBox(
-                      height: 150,
-                      width: 150,
-                    ),
-                  ),
-                ),
+                MenuItemImage(),
                 SizedBox(
                   height: 30,
                 ),
@@ -125,6 +118,114 @@ class AddMenuItemScreen extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class MenuItemImage extends StatefulWidget {
+  MenuItemImage({Key? key}) : super(key: key);
+
+  @override
+  _MenuItemImageState createState() => _MenuItemImageState();
+}
+
+class _MenuItemImageState extends State<MenuItemImage> {
+  final ImagePicker _picker = ImagePicker();
+  XFile? image;
+
+  // onLogoTap() async {
+  //   print(_image?.path);
+  //   setState(() {
+  //     image = _image;
+  //   });
+  // }
+
+  Widget buildButton(
+      {required GestureTapCallback? onTap,
+      required String title,
+      required IconData icon}) {
+    return Container(
+      margin: EdgeInsets.all(20),
+      child: InkWell(
+        onTap: onTap,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              size: 60,
+            ),
+            SizedBox(
+              height: 2,
+            ),
+            Text(
+              "$title",
+              style: TextStyle(fontSize: 25),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () async {
+        ImageSource? src = await showModalBottomSheet(
+          context: context,
+          builder: (ctx) {
+            return Container(
+                height: 150,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: buildButton(
+                          onTap: () {
+                            Navigator.of(ctx).pop(ImageSource.camera);
+                          },
+                          icon: Icons.camera_alt,
+                          title: "Camera"),
+                    ),
+                    Expanded(
+                      child: buildButton(
+                          onTap: () {
+                            Navigator.of(ctx).pop(ImageSource.gallery);
+                          },
+                          icon: Icons.file_copy_outlined,
+                          title: "Gallery"),
+                    ),
+                  ],
+                ));
+          },
+        );
+        if (src != null) {
+          XFile? _image =
+              await _picker.pickImage(source: src, imageQuality: 30);
+          setState(() {
+            image = _image;
+            BlocProvider.of<NewMenuBloc>(context).add(UpdateMenuItemImage(File(_image!.path)));
+          });
+        }
+      },
+      child: Container(
+        decoration: new BoxDecoration(
+          border: Border.all(width: 1, style: BorderStyle.solid),
+        ),
+        child: image != null
+            ? Image.file(
+                File(image!.path),
+                height: 150,
+                width: 150,
+                fit: BoxFit.cover,
+              )
+            : Image.network(
+                Constants.DUMMY_IMAGE,
+                height: 150,
+                width: 150,
+                fit: BoxFit.cover,
+              ),
       ),
     );
   }

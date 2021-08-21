@@ -193,19 +193,75 @@ class _LogoState extends State<Logo> {
   XFile? image;
 
   onLogoTap() async {
-    XFile? _image =
-        await _picker.pickImage(source: ImageSource.camera, imageQuality: 30);
-    print(_image?.path);
-    setState(() {
-      image = _image;
-      uploadImage();
-    });
+    ImageSource? src = await showModalBottomSheet(
+      context: context,
+      builder: (ctx) {
+        return Container(
+            height: 150,
+            child: Row(
+              children: [
+                Expanded(
+                  child: buildButton(
+                      onTap: () {
+                        Navigator.of(ctx).pop(ImageSource.camera);
+                      },
+                      icon: Icons.camera_alt,
+                      title: "Camera"),
+                ),
+                Expanded(
+                  child: buildButton(
+                      onTap: () {
+                        Navigator.of(ctx).pop(ImageSource.gallery);
+                      },
+                      icon: Icons.file_copy_outlined,
+                      title: "Gallery"),
+                ),
+              ],
+            ));
+      },
+    );
+    if (src != null) {
+      XFile? _image =
+      await _picker.pickImage(source: src, imageQuality: 30);
+      setState(() {
+        image = _image;
+        uploadImage();
+      });
+    }
   }
 
   @override
   void initState() {
     super.initState();
     api = RepositoryProvider.of(context);
+  }
+
+  Widget buildButton(
+      {required GestureTapCallback? onTap,
+        required String title,
+        required IconData icon}) {
+    return Container(
+      margin: EdgeInsets.all(20),
+      child: InkWell(
+        onTap: onTap,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              size: 60,
+            ),
+            SizedBox(
+              height: 2,
+            ),
+            Text(
+              "$title",
+              style: TextStyle(fontSize: 25),
+            )
+          ],
+        ),
+      ),
+    );
   }
 
   void uploadImage() async {

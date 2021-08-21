@@ -10,6 +10,7 @@ class NewMenuState {
   final List<MenuItemModifier> modifier;
   final bool active;
   final NewMenuStatus status;
+  final File? image;
 
   get isValid {
     bool _isValid = true;
@@ -28,7 +29,8 @@ class NewMenuState {
       required this.description,
       required this.tags,
       required this.status,
-      required this.modifier});
+      required this.modifier,
+      this.image});
 
   NewMenuState copyWith(
       {String? name,
@@ -37,7 +39,8 @@ class NewMenuState {
       String? description,
       NewMenuStatus? status,
       List<String>? tags,
-      List<MenuItemModifier>? modifier}) {
+      List<MenuItemModifier>? modifier,
+      File? image}) {
     return NewMenuState(
         active: active ?? this.active,
         name: name ?? this.name,
@@ -45,6 +48,7 @@ class NewMenuState {
         status: status ?? this.status,
         description: description ?? this.description,
         tags: tags ?? this.tags,
-        modifier: modifier ?? this.modifier);
+        modifier: modifier ?? this.modifier,
+        image: image ?? this.image);
   }
 }

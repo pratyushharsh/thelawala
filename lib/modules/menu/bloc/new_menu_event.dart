@@ -35,3 +35,9 @@ class OnActiveChange extends NewMenuEvent {
 class OnCreateNewMenuItem extends NewMenuEvent {}
 
 class UpdateExistingProduct extends NewMenuEvent {}
+
+class UpdateMenuItemImage extends NewMenuEvent {
+  final File image;
+
+  UpdateMenuItemImage(this.image);
+}

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:http/http.dart';
 import 'package:meta/meta.dart';
@@ -25,7 +26,8 @@ class NewMenuBloc extends Bloc<NewMenuEvent, NewMenuState> {
   final RestApiBuilder api;
   final String category;
   final MenuItemResponse? existingItem;
-  NewMenuBloc(this.api, this.category, {this.existingItem})
+  final bool isNew;
+  NewMenuBloc(this.api, this.category, {this.existingItem, this.isNew = true})
       : super(NewMenuState(
             name: existingItem?.name ?? '',
             price: existingItem?.price.toString() ?? '',
@@ -53,7 +55,13 @@ class NewMenuBloc extends Bloc<NewMenuEvent, NewMenuState> {
       yield state.copyWith(active: event.active);
     } else if (event is OnCreateNewMenuItem) {
       yield* _mapNewMenuItem(state);
+    } else if (event is UpdateMenuItemImage) {
+      yield state.copyWith(image: event.image);
     }
+  }
+
+  Future<void> _uploadMenuImage(File image) async {
+    print(image.path);
   }
 
   Stream<NewMenuState> _mapNewMenuItem(NewMenuState state) async* {
@@ -81,6 +89,9 @@ class NewMenuBloc extends Bloc<NewMenuEvent, NewMenuState> {
           RestOptions(path: "/menu/$category", body: json.encode(req));
       Response response = await api.post(restOptions: options);
       print(response);
+      if (state.image != null) {
+        _uploadMenuImage(state.image!);
+      }
       yield state.copyWith(status: NewMenuStatus.SUCCESS);
     } catch (e) {
       print(e);
