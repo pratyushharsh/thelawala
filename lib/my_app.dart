@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       providers: [
         RepositoryProvider(
             create: (_) => RestApiBuilder(
-                "https://4hz6brkc59.execute-api.ap-south-1.amazonaws.com/dev")),
+                "https://t6tzjiu6k7.execute-api.ap-south-1.amazonaws.com/dev")),
         RepositoryProvider(create: (_) => AuthenticationRepository()),
       ],
       child: MultiBlocProvider(providers: [

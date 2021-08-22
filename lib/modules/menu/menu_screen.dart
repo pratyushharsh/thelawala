@@ -5,6 +5,7 @@ import 'package:thelawala/constants/Constants.dart';
 import 'package:thelawala/models/response/category-response.dart';
 import 'package:thelawala/models/response/menu-item-response.dart';
 import 'package:thelawala/modules/menu/bloc/menu_bloc.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class MenuScreen extends StatelessWidget {
   final CategoryResponse category;
@@ -96,8 +97,9 @@ class _ProductCardState extends State<ProductCard> {
                       bottomLeft: Radius.circular(10),
                     ),
                     child: widget.menuItem.image != null
-                        ? Image.network(
-                            widget.menuItem.image!.medium,
+                        ? FadeInImage.memoryNetwork(
+                            placeholder: kTransparentImage,
+                            image: widget.menuItem.image!.medium,
                             height: 100,
                             width: 100,
                           )

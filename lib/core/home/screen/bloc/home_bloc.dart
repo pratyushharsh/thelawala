@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
-import 'package:thelawala/constants/api-url.dart';
 import 'package:thelawala/models/response/get-user-profile.dart';
 import 'package:thelawala/utils/helpers/rest-api.dart';
 
@@ -10,6 +10,7 @@ part 'home_event.dart';
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
+  final log = Logger('HomeBloc');
   final RestApiBuilder api;
 
   HomeBloc(this.api) : super(HomeState(status: DashboardStatus.INITIAL)) {

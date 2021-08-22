@@ -3,11 +3,13 @@ import 'package:amplify_flutter/amplify.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:thelawala/bloc_observer.dart';
+import 'package:thelawala/log.dart';
 
 import 'my_app.dart';
 import 'amplifyconfiguration.dart';
 
 void main() async {
+  initRootLogger();
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = TWBlocObserver();
   await _initAmplifyFlutter();

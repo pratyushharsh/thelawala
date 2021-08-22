@@ -6,8 +6,10 @@ import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+import 'package:logging/logging.dart';
 
 class RestApiBuilder {
+  final log = Logger('VendorApi');
   final String baseUrl;
 
   RestApiBuilder(this.baseUrl);
@@ -54,13 +56,13 @@ class RestApiBuilder {
     Map<String, String> auth = await buildAuthHeader(session);
     Map<String, String> header = new HashMap.from(auth);
     var _url = Uri.parse(baseUrl + '/vendor/${session.userSub}' + restOptions.path);
-    print('************************');
-    print(header);
-    print('************************');
+    String _logRequestMessage = 'Request\turl:$_url\theaders:${restOptions.headers}';
+    log.info(_logRequestMessage);
     final response =
     await http.get(_url, headers: header);
     var parsed = json.decode(response.body);
-    print(parsed);
+    String _logResponseMessage = 'Response:\t$parsed';
+    log.info(_logResponseMessage);
     return response;
   }
 
@@ -69,10 +71,11 @@ class RestApiBuilder {
     Map<String, String> auth = await buildAuthHeader(session);
     Map<String, String> header = new HashMap.from(auth);
     var _url = Uri.parse(baseUrl + '/vendor/${session.userSub}' + restOptions.path);
+    log.info('Getting response from $_url');
     final response =
       await http.post(_url, headers: header, body: restOptions.body);
     var parsed = json.decode(response.body);
-    print(parsed);
+    log.info(parsed);
     return response;
   }
 
