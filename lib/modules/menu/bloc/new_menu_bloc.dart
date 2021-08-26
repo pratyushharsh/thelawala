@@ -63,7 +63,7 @@ class NewMenuBloc extends Bloc<NewMenuEvent, NewMenuState> {
   }
 
   Future<void> _uploadMenuImage(File image, String itemid) async {
-    RestOptions options = RestOptions(path: "/menu/$category/$itemid/images");
+    RestOptions options = RestOptions(path: "/menu/$category/$itemid/image");
     try {
       var rawResponse = await api.get(restOptions: options);
       var resp = api.parsedResponse(rawResponse);

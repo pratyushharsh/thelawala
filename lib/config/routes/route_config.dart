@@ -13,6 +13,7 @@ import 'package:thelawala/modules/dashboard/update-profile/update-profile.dart';
 import 'package:thelawala/modules/menu/add_menu_item_screen.dart';
 import 'package:thelawala/modules/menu/item_modifier.dart';
 import 'package:thelawala/modules/menu/menu_screen.dart';
+import 'package:thelawala/modules/order-detail/order_detail_screen.dart';
 
 class RouteConfig {
   static const String SPLASH_SCREEN = "/";
@@ -31,6 +32,7 @@ class RouteConfig {
 
   static const String ADD_NEW_CATEGORY = '/add-new-category';
   static const String CATEGORY_PAGE = '/category';
+  static const String ORDER_DETAIL_PAGE = '/order-detail';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -64,6 +66,9 @@ class RouteConfig {
       case MENU_SCREEN:
         var cat = settings.arguments as CategoryResponse;
         return MaterialPageRoute(builder: (_) => MenuScreen(category: cat,));
+      case ORDER_DETAIL_PAGE:
+        var orderId = settings.arguments as String;
+        return MaterialPageRoute(builder: (_) => OrderDetailScreen(orderId: orderId,));
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(

@@ -9,6 +9,8 @@ import 'core/auth/authentication/bloc/authentication_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'modules/orders/bloc/order_search_bloc.dart';
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -27,6 +29,7 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(lazy: false, create: (ctx) => HomeBloc(RepositoryProvider.of(ctx))),
         BlocProvider(lazy: false, create: (ctx) => CategoryBloc(RepositoryProvider.of(ctx))),
+        BlocProvider(lazy: false, create: (ctx) => OrderSearchBloc(RepositoryProvider.of(ctx))),
         BlocProvider(lazy: false, create: (ctx) => SettingsBloc(RepositoryProvider.of(ctx))..add(GetCurrentLocation()))
       ], child: AppView()),
     );
