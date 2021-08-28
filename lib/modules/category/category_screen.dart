@@ -11,13 +11,10 @@ class CategoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocBuilder<CategoryBloc, CategoryState>(builder: (context, state) {
-
         if (state.status == CategoryStatus.LOADING)
           return Center(
             child: SizedBox(
-                height: 150,
-                width: 150,
-                child: CircularProgressIndicator()),
+                height: 150, width: 150, child: CircularProgressIndicator()),
           );
 
         return RefreshIndicator(
@@ -69,21 +66,26 @@ class CategoryCard extends StatelessWidget {
                 radius: 24,
                 child: Text("CT"),
               ),
-              Container(
-                padding: EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "${category.name}",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                    ),
-                    SizedBox(
-                      height: 6,
-                    ),
-                    Text("${category.itemCount} items")
-                  ],
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "${category.name}",
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 6,
+                      ),
+                      Text("${category.itemCount} items")
+                    ],
+                  ),
                 ),
               )
             ],

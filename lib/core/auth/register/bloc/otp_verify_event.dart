@@ -10,3 +10,5 @@ class OnOtpChange extends OtpVerifyEvent {
 }
 
 class VerifyOtp extends OtpVerifyEvent {}
+
+class ResendSignUpCode extends OtpVerifyEvent {}

@@ -12,6 +12,7 @@ class CustomTextField extends StatelessWidget {
   final TextInputType? textInputType;
   final BoxConstraints? prefixIconConstraint;
   final TextEditingController? controller;
+  final bool obscureText;
 
   const CustomTextField(
       {Key? key,
@@ -25,6 +26,7 @@ class CustomTextField extends StatelessWidget {
         this.textInputType,
         this.errorText,
         this.controller,
+        this.obscureText = false,
         this.prefixIconConstraint = const BoxConstraints(minWidth: 40, minHeight: 40)})
       : super(key: key);
 
@@ -53,6 +55,7 @@ class CustomTextField extends StatelessWidget {
           minLines: minLines,
           maxLines: maxLines,
           onChanged: onValueChange,
+          obscureText: obscureText,
           decoration: InputDecoration(
             prefixIconConstraints: prefixIconConstraint,
             prefixIcon: icon,

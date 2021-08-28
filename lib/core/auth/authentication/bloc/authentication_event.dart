@@ -12,3 +12,5 @@ class AuthenticationUserChanged extends AuthenticationEvent {
 }
 
 class SignOutUser extends AuthenticationEvent {}
+
+class ResendSignUpCode extends AuthenticationEvent {}

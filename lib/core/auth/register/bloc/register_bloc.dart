@@ -26,13 +26,13 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     RegisterEvent event,
   ) async* {
     if (event is UsernameChangeEvent) {
-      yield state.copyWith(fullname: event.value);
+      yield state.copyWith(fullname: event.value, status: RegisterStatus.INITIAL,);
     } else if (event is PasswordChangeEvent) {
-      yield state.copyWith(password: event.value);
+      yield state.copyWith(password: event.value, status: RegisterStatus.INITIAL,);
     } else if (event is PhoneChangeEvent) {
-      yield state.copyWith(phone: event.value);
+      yield state.copyWith(phone: event.value, status: RegisterStatus.INITIAL,);
     } else if (event is EmailChangeEvent) {
-      yield state.copyWith(email: event.value);
+      yield state.copyWith(email: event.value, status: RegisterStatus.INITIAL,);
     } else if (event is SubmitUser) {
       yield* _mapOnUserSignUp(state);
     }

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -15,7 +14,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     signInIfSessionAvailable();
   }
 
-  signInIfSessionAvailable() async {
+  Future<void> signInIfSessionAvailable() async {
     print('Getting if user already present');
     // final session = await Amplify.Auth.fetchAuthSession();
     // if (session.isSignedIn) {
@@ -33,7 +32,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     try {
       var res = await Amplify.Auth.getCurrentUser();
       print(res);
-      List<AuthUserAttribute> attr = await Amplify.Auth.fetchUserAttributes();
+      // List<AuthUserAttribute> attr = await Amplify.Auth.fetchUserAttributes();
       // User usr = User(
       //     id: res.userId,
       //     email: res.username
@@ -65,23 +64,23 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     yield AuthenticationState.unauthenticated();
   }
 
-  mapOtherUserProperties(List<AuthUserAttribute> attr, ) {
-
-    var phone;
-    var name;
-
-    attr.forEach((e) {
-      if (e.userAttributeKey == 'phone_number') {
-        phone  = e.value;
-      }
-    });
-
-    attr.forEach((e) {
-      if (e.userAttributeKey == 'name') {
-        name  = e.value;
-      }
-    });
-  }
+  // mapOtherUserProperties(List<AuthUserAttribute> attr, ) {
+  //
+  //   var phone;
+  //   var name;
+  //
+  //   attr.forEach((e) {
+  //     if (e.userAttributeKey == 'phone_number') {
+  //       phone  = e.value;
+  //     }
+  //   });
+  //
+  //   attr.forEach((e) {
+  //     if (e.userAttributeKey == 'name') {
+  //       name  = e.value;
+  //     }
+  //   });
+  // }
 
   AuthenticationState _mapAuthenticationUserChangedToState(
       AuthenticationUserChanged event,

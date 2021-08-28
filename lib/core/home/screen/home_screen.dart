@@ -6,7 +6,6 @@ import 'package:thelawala/modules/dashboard/detail/dashboard-detail.dart';
 import 'package:thelawala/modules/orders/order-search-screen.dart';
 import 'package:thelawala/utils/services/menu-service.dart';
 
-
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -28,13 +27,18 @@ class _HomePageState extends State<HomePage> {
 
   int _selectedIndex = 0;
 
-  static List<Widget> _tabs = [DashboardDetail(), CategoryScreen(), OrderDetail(), Settings()];
+  static List<Widget> _tabs = [
+    DashboardDetail(),
+    CategoryScreen(),
+    OrderDetail(),
+    Settings()
+  ];
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+  // void _onItemTapped(int index) {
+  //   setState(() {
+  //     _selectedIndex = index;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {

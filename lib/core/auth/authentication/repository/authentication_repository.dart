@@ -23,12 +23,11 @@ class LogInWithGoogleFailure implements Exception {}
 class LogOutFailure implements Exception {}
 
 class AuthenticationRepository {
-  Future<SignUpResult> signUp({
-    required String password,
-    required String email,
-    required String phone,
-    required String name
-  }) async {
+  Future<SignUpResult> signUp(
+      {required String password,
+      required String email,
+      required String phone,
+      required String name}) async {
     try {
       Map<String, String> attrib = HashMap();
       attrib.putIfAbsent("email", () => email);
@@ -39,7 +38,7 @@ class AuthenticationRepository {
           password: password,
           options: CognitoSignUpOptions(userAttributes: attrib));
       return result;
-    } on AuthException catch(e) {
+    } on AuthException catch (e) {
       throw SignUpFailure(e.message);
     } catch (e) {
       print(e);
@@ -82,5 +81,26 @@ class AuthenticationRepository {
       print(e);
       throw LogInWithEmailAndPasswordFailure(e.message);
     }
+  }
+
+  Future<void> resendSignUpCode({required String username}) async {
+    var response = await Amplify.Auth.resendSignUpCode(username: username);
+    print(response.toString());
+  }
+
+  Future<void> resetPassword({required String username}) async {
+    var response = await Amplify.Auth.resetPassword(username: username);
+    print(response);
+  }
+
+  Future<void> confirmPassword(
+      {required String username,
+      required String password,
+      required String confirmationCode}) async {
+    var response = await Amplify.Auth.confirmPassword(
+        username: username,
+        newPassword: password,
+        confirmationCode: confirmationCode);
+    print(response);
   }
 }

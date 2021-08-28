@@ -23,6 +23,8 @@ class OtpVerifyBloc extends Bloc<OtpVerifyEvent, OtpVerifyState> {
       yield state.copyWith(otp: event.otp);
     } else if (event is VerifyOtp) {
       yield* _mapSubmitOtp();
+    } else if (event is ResendSignUpCode) {
+      yield* _mapResendOtp();
     }
   }
 
@@ -36,6 +38,15 @@ class OtpVerifyBloc extends Bloc<OtpVerifyEvent, OtpVerifyState> {
       yield state.copyWith(status: OTPVerifyStatus.VERIFIED);
     } catch (e) {
       yield state.copyWith(status: OTPVerifyStatus.FAILURE);
+    }
+  }
+
+  Stream<OtpVerifyState> _mapResendOtp() async* {
+    try {
+      await authRepo.resendSignUpCode(username: state.username);
+      yield state.copyWith(status: OTPVerifyStatus.INITIAL);
+    } catch (e) {
+      print(e);
     }
   }
 }

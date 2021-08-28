@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:thelawala/config/routes/route_config.dart';
 import 'package:thelawala/core/auth/register/bloc/register_bloc.dart';
+import 'package:thelawala/widgets/custom_text_field.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -11,15 +12,22 @@ class RegisterScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(),
       body: BlocProvider(
-        create: (context) => RegisterBloc(authRepo: RepositoryProvider.of(context)),
+        create: (context) =>
+            RegisterBloc(authRepo: RepositoryProvider.of(context)),
         child: Container(
-          margin: EdgeInsets.all(25),
+          margin: EdgeInsets.all(20),
           child: ListView(
             children: [
               Text(
                 "Sign up",
-                style: TextStyle(fontSize: 50),
+                style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
               ),
+              SizedBox(height: 10,),
+              Text(
+                "Welcome Aboard",
+                style: TextStyle(fontSize: 20),
+              ),
+              SizedBox(height: 20,),
               UserDetail()
             ],
           ),
@@ -51,13 +59,13 @@ class _UserDetailState extends State<UserDetail> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<RegisterBloc, RegisterState>(
-        listener: (ctx, state) {
+    return BlocConsumer<RegisterBloc, RegisterState>(listener: (ctx, state) {
       if (RegisterStatus.LOADING == state.status) {
         _showAlert(ctx);
       } else if (RegisterStatus.OTP_VERIFICATION_STARTED == state.status) {
         Navigator.pop(ctx);
-        Navigator.of(context).pushNamed(RouteConfig.VERIFY_OTP_PAGE, arguments: state.email);
+        Navigator.of(context)
+            .pushNamed(RouteConfig.VERIFY_OTP_PAGE, arguments: state.email);
       } else if (RegisterStatus.FAILURE == state.status) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -67,44 +75,51 @@ class _UserDetailState extends State<UserDetail> {
     }, builder: (context, state) {
       return Column(
         children: [
-          TextFormField(
+          CustomTextField(
+            label: 'Full Name',
             initialValue: state.fullname,
-            decoration: InputDecoration(
-                prefixIcon: Icon(Icons.person), labelText: "Name"),
-            onChanged: (val) {
-              BlocProvider.of<RegisterBloc>(context).add(UsernameChangeEvent(val));
+            onValueChange: (val) {
+              BlocProvider.of<RegisterBloc>(context)
+                  .add(UsernameChangeEvent(val));
             },
           ),
-          TextFormField(
+          CustomTextField(
+            label: 'Email',
             initialValue: state.email,
-            decoration: InputDecoration(
-                prefixIcon: Icon(Icons.email), labelText: "Email"),
-            onChanged: (val) {
-              BlocProvider.of<RegisterBloc>(context).add(EmailChangeEvent(val));
+            onValueChange: (val) {
+              BlocProvider.of<RegisterBloc>(context)
+                  .add(EmailChangeEvent(val));
             },
           ),
-          TextFormField(
+          CustomTextField(
+            label: 'Password',
             initialValue: state.password,
-            obscureText: true,
-            decoration: InputDecoration(
-                prefixIcon: Icon(Icons.lock), labelText: "Password"),
-            onChanged: (val) {
-              BlocProvider.of<RegisterBloc>(context).add(PasswordChangeEvent(val));
+            onValueChange: (val) {
+              BlocProvider.of<RegisterBloc>(context)
+                  .add(PasswordChangeEvent(val));
             },
           ),
-          TextFormField(
+          CustomTextField(
+            label: 'Phone',
             initialValue: state.phone,
-            decoration: InputDecoration(
-                prefixIcon: Icon(Icons.phone), labelText: "Phone"),
-            onChanged: (val) {
-              BlocProvider.of<RegisterBloc>(context).add(PhoneChangeEvent(val));
+            onValueChange: (val) {
+              BlocProvider.of<RegisterBloc>(context)
+                  .add(PhoneChangeEvent(val));
             },
           ),
-          TextButton(
-              onPressed: () {
-                BlocProvider.of<RegisterBloc>(context).add(SubmitUser());
-              },
-              child: Text("Sign Up"))
+          SizedBox(height: 20,),
+          if (state.isValid)
+          Row(
+            children: [
+              Expanded(
+                child: ElevatedButton(
+                    onPressed: () {
+                      BlocProvider.of<RegisterBloc>(context).add(SubmitUser());
+                    },
+                    child: Text("Sign Up")),
+              ),
+            ],
+          )
         ],
       );
     });

@@ -25,6 +25,10 @@ class RegisterState extends Equatable {
       required this.status,
       required this.error});
 
+  bool get isValid {
+    return fullname.isNotEmpty && email.isNotEmpty && password.isNotEmpty && phone.isNotEmpty;
+  }
+
   RegisterState copyWith(
       {String? fullname,
       String? email,
